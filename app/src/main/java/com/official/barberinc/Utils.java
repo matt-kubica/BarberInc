@@ -27,6 +27,4 @@ public final class Utils {
     }
 
     public static final String DATE_INTENT = "com.official.barberinc.SELECTED_DATE_INTENT";
-
-    public static final int HOUR = 3600000;
 }

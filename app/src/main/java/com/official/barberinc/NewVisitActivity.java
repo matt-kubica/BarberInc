@@ -70,7 +70,6 @@ public class NewVisitActivity extends AppCompatActivity {
 
     private void setDateView() {
         dateView = findViewById(R.id.date);
-        // dateView.setText(new SimpleDateFormat(Utils.DateFormats.DATE_FORMAT).format(Calendar.getInstance().getTime()));
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,7 +172,7 @@ public class NewVisitActivity extends AppCompatActivity {
                     String datetimeString = dateString + " " + timeString;
 
                     if (!databaseHelper.addData(new Visit(datetimeString, nameView.getText().toString(), tag))) {
-                        Toast.makeText(NewVisitActivity.this, "Some error occurred!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NewVisitActivity.this, "Some error occured!", Toast.LENGTH_SHORT).show();
                         finish();
                     } else {
                         Toast.makeText(NewVisitActivity.this, "New visit added!", Toast.LENGTH_SHORT).show();

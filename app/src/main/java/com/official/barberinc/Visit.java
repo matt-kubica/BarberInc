@@ -8,7 +8,7 @@ public class Visit {
 
     private int id;
     private String datetime;
-    private Date start, end;
+    private String date, time;
     private String name;
     private int tag;
 
@@ -20,24 +20,17 @@ public class Visit {
         initDate();
     }
 
-    public Visit(Date start, Date end, String name, int tag) {
-        this.start = start;
-        this.end = end;
-        this.name = name;
-        this.tag = tag;
-
-        initDatetime();
-    }
-
     public int getId() { return id; }
 
     public String getDatetime() { return datetime; }
 
-    public Date getStartTime() {
-        return start;
+    public String getDate() {
+        return date;
     }
 
-    public Date getEndTime() { return end; }
+    public String getTime() {
+        return time;
+    }
 
     public String getName() {
         return name;
@@ -48,31 +41,17 @@ public class Visit {
     }
 
     private void initDate() {
-        int durationMinutes = 0;
-        final int milisInMinute = 60000;
-
-        switch (tag) {
-            case Utils.VisitTypes.HAIRCUT:
-                durationMinutes = Utils.Durations.HAIRCUT_DURATION_MINUTES;
-                break;
-            case Utils.VisitTypes.BARBER:
-                durationMinutes = Utils.Durations.BARBER_DURATION_MINUTES;
-                break;
-            case Utils.VisitTypes.COMBO:
-                durationMinutes = Utils.Durations.COMBO_DURATION_MINUTES;
-                break;
-        }
+        Date date;
+        SimpleDateFormat datetimeFormat = new SimpleDateFormat(Utils.DateFormats.DATETIME_FORMAT);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(Utils.DateFormats.DATE_FORMAT);
+        SimpleDateFormat timeFormat = new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT);
 
         try {
-            start = new SimpleDateFormat(Utils.DateFormats.DATETIME_FORMAT).parse(datetime);
-            end = new Date(start.getTime() + durationMinutes * milisInMinute);
+            date = datetimeFormat.parse(datetime);
+            this.date = dateFormat.format(date);
+            this.time = timeFormat.format(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
-
-    private void initDatetime() {
-        datetime = new SimpleDateFormat(Utils.DateFormats.DATETIME_FORMAT).format(start);
-    }
-
 }
