@@ -1,49 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CertainDayActivity"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="4sp"
-        android:layout_margin="12sp"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="32sp"
-        android:layout_alignParentTop="true"
-        />
-
-    <ListView
-
-        android:id="@+id/list_view"
-        android:layout_alignParentTop="false"
-        android:layout_below="@id/date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@color/material_blue_grey_800"
-        android:dividerHeight="1dp"
-        android:layout_margin="12sp"
-        android:footerDividersEnabled="false"
-        />
+    tools:context=".CertainDayActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_new_visit_fab"
-        android:layout_height="wrap_content"
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="24dp"
-        android:src="@android:drawable/ic_input_add"
-        android:tint="@android:color/white"
-        app:fabSize="normal"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/margin_medium"
+        app:srcCompat="@android:drawable/ic_input_add"
+        android:tint="@android:color/white"/>
 
-        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+    >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/labels_layout"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginLeft="@dimen/margin_small"
+            >
 
-</RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/day_name_view"
+                android:textSize="@dimen/text_large"
+                android:text="MON"
+                android:padding="@dimen/padding_medium"
+                android:textColor="@color/colorPrimaryDark"
+                android:textAllCaps="true"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/date_view"
+                android:text="12-12-2012"
+                android:textSize="@dimen/text_large"
+                android:padding="@dimen/padding_medium"
+                />
+
+        </LinearLayout>
+
+
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scroll_view"
+            android:layout_below="@id/labels_layout"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/zebra_layout"
+                    android:layout_marginTop="@dimen/margin_medium" />
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/main_container_layout"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:layout_marginRight="@dimen/margin_medium"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/hours_layout"
+                        android:orientation="vertical"
+                        />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/visits_layout"
+                        android:layout_marginLeft="@dimen/margin_medium"
+                        android:layout_marginRight="@dimen/margin_medium"
+                        />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+        </ScrollView>
+
+
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

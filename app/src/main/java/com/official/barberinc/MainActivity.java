@@ -37,29 +37,24 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         calendarView = findViewById(R.id.calendar_view);
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                GregorianCalendar calendar = new GregorianCalendar();
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        calendarView.setFirstDayOfWeek(Calendar.MONDAY);
+        calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            GregorianCalendar calendar = new GregorianCalendar();
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                String selectedDate = new SimpleDateFormat(Utils.DateFormats.DATE_FORMAT).format(calendar.getTime());
-                Intent intent = new Intent(MainActivity.this, CertainDayActivity.class);
-                intent.putExtra(Utils.DATE_INTENT, selectedDate);
-                startActivity(intent);
-            }
+            String selectedDate = new SimpleDateFormat(Utils.DateFormats.DATE_FORMAT).format(calendar.getTime());
+            Intent intent = new Intent(MainActivity.this, CertainDayActivity.class);
+            intent.putExtra(Utils.DATE_INTENT, selectedDate);
+            startActivity(intent);
         });
 
         fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, NewVisitActivity.class);
-                intent.putExtra(Utils.DATE_INTENT, "");
-                startActivity(intent);
-            }
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, NewVisitActivity.class);
+            intent.putExtra(Utils.DATE_INTENT, "");
+            startActivity(intent);
         });
     }
 

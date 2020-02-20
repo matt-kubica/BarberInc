@@ -3,4 +3,13 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="colorDivider">#757575</color>
+
+    <color name="comboBackground">#ff9494</color>
+    <color name="comboStroke">#ff4a4a</color>
+    <color name="haircutBackground">#ffe596</color>
+    <color name="haircutStroke">#facb3c</color>
+    <color name="barberBackground">#b796ff</color>
+    <color name="barberStroke">#8852ff</color>
 </resources>

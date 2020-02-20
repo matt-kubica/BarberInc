@@ -154,7 +154,7 @@ public class NewVisitActivity extends AppCompatActivity {
                         tag = Utils.VisitTypes.HAIRCUT;
                         break;
                     default:
-                        tag = Utils.SpecialTags.WRONG;
+                        tag = Utils.specialTags.WRONG;
                 }
             }
         });
@@ -166,7 +166,7 @@ public class NewVisitActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(nameView.getText().length() > 0 &&
-                date != null && time != null && tag != Utils.SpecialTags.WRONG) {
+                date != null && time != null && tag != Utils.specialTags.WRONG) {
                     String dateString = new SimpleDateFormat(Utils.DateFormats.DATE_FORMAT).format(date);
                     String timeString = new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(time);
                     String datetimeString = dateString + " " + timeString;
