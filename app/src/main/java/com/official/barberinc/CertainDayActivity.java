@@ -102,10 +102,10 @@ public class CertainDayActivity extends AppCompatActivity {
 
     private void setZebraLayout() {
         ViewGroup zebraLayout = findViewById(R.id.zebra_layout);
-        for(int i = 0; i < Utils.HOURS_LAYOUT_VALUES.length; i++) {
+        for(int i = 0; i < Utils.HOURS_LAYOUT_VALUES.length ; i++) {
             View dividerView = new View(this);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dpToPx(DP_DIVIDER_HEIGHT, this));
-            params.setMargins(16, Utils.dpToPx(i * DP_HOUR_LENGTH, this), 16,0);
+            params.setMargins(16, Utils.dpToPx(i * DP_HOUR_LENGTH , this), 16,0);
             dividerView.setLayoutParams(params);
             dividerView.setBackgroundColor(getResources().getColor(R.color.colorDivider));
             zebraLayout.addView(dividerView);
