@@ -1,16 +1,16 @@
 # BarberInc
 
 ## Overview 
-Simple app that helps schedule visit in small one-man show barbershop. Main functionalities:
+Simple app that helps schedule visits in small one-man show barbershop. Main functionalities:
 * Adding new visit - parameters that need to be provided:
-⋅* date
-⋅* time
-⋅* name
-⋅* visit type
+    * date
+    * time
+    * name
+    * visit type
 * Adding new visit on certain date - parameters that need to be provided:
-⋅* time
-⋅* name
-⋅* visit type
+    * time
+    * name
+    * visit type
 * Displaying visits on certain date
 
 Functionalities that are going to be implemented in the future:
