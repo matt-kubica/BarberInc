@@ -1,5 +1,7 @@
 package com.official.barberinc;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -40,6 +42,7 @@ public class Visit {
     public long getDurationMinutes() {
         return (end.getTime() - start.getTime()) / MILLIS_IN_MINUTE;
     }
+
 
     public long getMinutesSinceStart() {
         Calendar calendar = Calendar.getInstance();

@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Barber Inc</string>
     <string name="action_settings">Settings</string>
+
+    <string name="tag_name_haircut">haircut</string>
+    <string name="tag_name_barber">barber</string>
+    <string name="tag_name_combo">combo</string>
 </resources>

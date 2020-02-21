@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin_border"
+    tools:context=".CertainDayActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/time"
+        android:text="12:30 - 13:15"
+        android:paddingHorizontal="@dimen/padding_small"
+        android:paddingVertical="@dimen/padding_tiny"
+        android:textSize="@dimen/text_small"
+        android:layout_gravity="left|top"
+        android:layout_marginLeft="@dimen/margin_small"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tag_name"
+        android:textSize="@dimen/text_small"
+        android:text="barber"
+        android:paddingHorizontal="@dimen/padding_medium"
+        android:paddingVertical="@dimen/padding_tiny"
+        android:layout_gravity="left|bottom"
+        android:layout_marginLeft="@dimen/margin_small"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/name"
+        android:text="Rafau"
+        android:padding="@dimen/padding_small"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:textSize="@dimen/text_medium"
+        android:layout_gravity="center_vertical|right"/>
+
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

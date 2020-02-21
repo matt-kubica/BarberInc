@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -66,25 +68,27 @@ public class CertainDayActivity extends AppCompatActivity {
     private void setVisitsLayout() {
         ViewGroup visitsLayout = findViewById(R.id.visits_layout);
         for(Visit v : visits) {
-            RelativeLayout innerLayout = new RelativeLayout(this);
-            RelativeLayout.LayoutParams innerLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dpToPx(v.getDurationMinutes(), this));
-            innerLayoutParams.setMargins(0,Utils.dpToPx(v.getMinutesSinceStart(),this), 0, 0);
-            innerLayout.setLayoutParams(innerLayoutParams);
+            View visitView = LayoutInflater.from(this).inflate(R.layout.view_visit, null);
+            TextView timeView = visitView.findViewById(R.id.time);
+            TextView nameView = visitView.findViewById(R.id.name);
+            TextView tagNameView = visitView.findViewById(R.id.tag_name);
 
-            TextView visitView = new TextView(this);
-            RelativeLayout.LayoutParams visitViewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            visitViewParams.setMargins(4,4,4,4);
+            LinearLayout.LayoutParams visitViewParams = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    Utils.dpToPx(v.getDurationMinutes(), this)
+            );
+
+            visitViewParams.setMargins(0,Utils.dpToPx(v.getMinutesSinceStart(),this), 0, 0);
             visitView.setLayoutParams(visitViewParams);
-            visitView.setBackgroundResource(setBackgroundDependentOnVisit(v));
-            visitView.setPadding(8,4,8,4);
+            visitView.setBackgroundResource(getBackgroundDependentOnVisit(v));
 
-            // TODO: Very poor, change it later, best option would be to write own view
-            String text = new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(v.getStart()) + " - " +new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(v.getEnd()) + "        " + v.getName();
-            visitView.setText(text);
+            timeView.setText(new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(v.getStart()) + " - " +
+                    new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(v.getEnd()));
 
+            nameView.setText(v.getName());
+            tagNameView.setText(getTagNameDependentOnVisit(v));
 
-            innerLayout.addView(visitView);
-            visitsLayout.addView(innerLayout);
+            visitsLayout.addView(visitView);
         }
     }
 
@@ -94,7 +98,7 @@ public class CertainDayActivity extends AppCompatActivity {
             TextView hourView = new TextView(this);
             hourView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, Utils.dpToPx(DP_HOUR_LENGTH, this)));
             hourView.setTextSize(TypedValue.COMPLEX_UNIT_SP, getResources().getDimension(R.dimen.text_tiny));
-            hourView.setPadding(4,4,4,4);
+            hourView.setPadding(4,2,4,2);
             hourView.setText(Utils.HOURS_LAYOUT_VALUES[i]);
             hoursLayout.addView(hourView);
         }
@@ -135,12 +139,30 @@ public class CertainDayActivity extends AppCompatActivity {
         visits = databaseHelper.getDataFromCertainDay(new SimpleDateFormat(Utils.DateFormats.DATE_FORMAT).format(date));
     }
 
-    private int setBackgroundDependentOnVisit(Visit visit) {
+    private int getBackgroundDependentOnVisit(Visit visit) {
         if(visit.getTag() == Utils.VisitTypes.HAIRCUT)
             return R.drawable.visit_haircut_background;
         else if(visit.getTag() == Utils.VisitTypes.BARBER)
             return R.drawable.visit_barber_background;
         else
             return R.drawable.visit_combo_background;
+    }
+
+    private String getTagNameDependentOnVisit(Visit visit) {
+        String tagName;
+        switch (visit.getTag()) {
+            case Utils.VisitTypes.HAIRCUT:
+                tagName = getResources().getString(R.string.tag_name_haircut);
+                break;
+            case Utils.VisitTypes.BARBER:
+                tagName = getResources().getString(R.string.tag_name_barber);
+                break;
+            case Utils.VisitTypes.COMBO:
+                tagName = getResources().getString(R.string.tag_name_combo);
+                break;
+            default:
+                tagName = "";
+        }
+        return tagName;
     }
 }
