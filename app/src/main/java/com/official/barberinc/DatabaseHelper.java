@@ -49,6 +49,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return (result == -1) ? false : true;
     }
 
+    public boolean deleteVisitById(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_NAME, COLUMN_ID + "=" + String.format("%d", id), null) > 0;
+    }
+
     public ArrayList <Visit> getDataFromCertainDay(String dateString) {
         ArrayList <Visit> results = new ArrayList<>();
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE date(" + COLUMN_DATETIME + ") = '" +
@@ -57,7 +62,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
 
         while(cursor.moveToNext()) {
-            results.add(new Visit(cursor.getString(1),
+            results.add(new Visit(cursor.getInt(0),
+                    cursor.getString(1),
                     cursor.getString(2),
                     cursor.getInt(3)));
         }

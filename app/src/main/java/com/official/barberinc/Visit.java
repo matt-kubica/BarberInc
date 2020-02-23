@@ -31,6 +31,15 @@ public class Visit {
         initDate();
     }
 
+    public Visit(int id, String datetime, String name, int tag) {
+        this.id = id;
+        this.datetime = datetime;
+        this.name = name;
+        this.tag = tag;
+
+        initDate();
+    }
+
     public int getId() { return id; }
 
     public Date getStart() { return start; }

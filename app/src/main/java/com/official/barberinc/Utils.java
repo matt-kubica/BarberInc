@@ -38,6 +38,7 @@ public final class Utils {
 
 
     public static final String DATE_INTENT = "com.official.barberinc.SELECTED_DATE_INTENT";
+    public static final String VISIT_ID_INTENT = "com.official.barberinc.VISIT_ID_INTENT";
 
     public static int spToPx(float sp, Context context) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
