@@ -54,6 +54,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.delete(TABLE_NAME, COLUMN_ID + "=" + String.format("%d", id), null) > 0;
     }
 
+    public Visit getVisitById(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE id = " + id + ";";
+        Cursor cursor = db.rawQuery(query,null);
+
+        if (cursor.moveToNext()) {
+            return new Visit(cursor.getInt(0),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getInt(3));
+        } else return null;
+    }
+
     public ArrayList <Visit> getDataFromCertainDay(String dateString) {
         ArrayList <Visit> results = new ArrayList<>();
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE date(" + COLUMN_DATETIME + ") = '" +

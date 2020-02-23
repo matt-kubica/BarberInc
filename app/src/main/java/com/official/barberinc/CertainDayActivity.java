@@ -1,11 +1,8 @@
 package com.official.barberinc;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.DialogFragment;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +10,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +41,7 @@ public class CertainDayActivity extends AppCompatActivity implements VisitDialog
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate called");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_certain_day);
 
@@ -66,18 +63,24 @@ public class CertainDayActivity extends AppCompatActivity implements VisitDialog
 
         setZebraLayout();
         setHoursLayout();
-        setVisitsLayout();
+
+        Log.d(TAG, "onCreate finished");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume called");
+
         initVisits();
         setVisitsLayout();
     }
 
+
     private void setVisitsLayout() {
+        Log.d(TAG, "setVisitsLayout called");
         visitsLayout = findViewById(R.id.visits_layout);
+        visitsLayout.removeAllViews();
         for(Visit v : visits) {
             View visitView = LayoutInflater.from(this).inflate(R.layout.view_visit, null);
             TextView timeView = visitView.findViewById(R.id.time);
@@ -96,7 +99,6 @@ public class CertainDayActivity extends AppCompatActivity implements VisitDialog
             visitView.setBackgroundResource(getBackgroundDependentOnVisit(v));
             visitView.requestLayout();
 
-            Log.d(TAG,Integer.toString(v.getId()));
             idView.setText(Integer.toString(v.getId()));
             timeView.setText(new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(v.getStart()) + " - " +
                     new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(v.getEnd()));
@@ -111,6 +113,7 @@ public class CertainDayActivity extends AppCompatActivity implements VisitDialog
 
             visitsLayout.addView(visitView);
         }
+        Log.d(TAG, "setVisitsLayout finished");
     }
 
     @Override
@@ -122,13 +125,15 @@ public class CertainDayActivity extends AppCompatActivity implements VisitDialog
             Toast.makeText(this, String.format("%s's visit deleted!", name), Toast.LENGTH_SHORT).show();
         else
             Toast.makeText(this, "Some error occurred!", Toast.LENGTH_SHORT).show();
-        recreate();
-        dialogFragment.dismiss();
+        onResume();
     }
 
     @Override
     public void onDialogNeutralClick(DialogFragment dialogFragment) {
-
+        Intent intent = new Intent(CertainDayActivity.this, NewVisitActivity.class);
+        intent.putExtra(Utils.VISIT_ID_INTENT, Integer.toString(((VisitDialogFragment) dialogFragment).id));
+        intent.putExtra(Utils.DATE_INTENT, new SimpleDateFormat(Utils.DateFormats.DATE_FORMAT).format(date));
+        startActivity(intent);
     }
 
     @Override

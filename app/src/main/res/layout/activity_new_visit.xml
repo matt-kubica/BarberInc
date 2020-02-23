@@ -58,21 +58,21 @@
         app:layout_constraintTop_toBottomOf="@+id/time">
 
         <RadioButton
-            android:id="@+id/radio_one"
+            android:id="@+id/radio_haircut"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
             android:text="haircut" />
 
         <RadioButton
-            android:id="@+id/radio_second"
+            android:id="@+id/radio_barber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
             android:text="barber" />
 
         <RadioButton
-            android:id="@+id/radio_third"
+            android:id="@+id/radio_combo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
@@ -85,7 +85,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="ADD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radio_group" />

@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, NewVisitActivity.class);
-            intent.putExtra(Utils.DATE_INTENT, "");
             startActivity(intent);
         });
     }
