@@ -24,7 +24,7 @@ public final class Utils {
         public static final int HOMMIE = 4;
     }
 
-    public static class specialTags {
+    public static class SpecialTags {
         public static final int WRONG = -1;
         public static final int BLANK = 0;
     }

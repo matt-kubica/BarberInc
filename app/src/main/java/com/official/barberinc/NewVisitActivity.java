@@ -18,10 +18,10 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 
 public class NewVisitActivity extends AppCompatActivity {
 
@@ -46,7 +46,7 @@ public class NewVisitActivity extends AppCompatActivity {
     private TextView nameView;
     private RadioGroup radioGroup;
     private RadioButton checkedButton;
-    private int tag;
+    private int tag = Utils.SpecialTags.BLANK;
 
     private Button applyButton;
 
@@ -79,7 +79,6 @@ public class NewVisitActivity extends AppCompatActivity {
 
 
         if(activityType == ActivityTypes.EDIT) {
-            Log.d(TAG, "ID = " + receivedIntent.getStringExtra(Utils.VISIT_ID_INTENT));
             setViewAccordingToVisit(Integer.parseInt(receivedIntent.getStringExtra(Utils.VISIT_ID_INTENT)));
         }
     }
@@ -92,17 +91,17 @@ public class NewVisitActivity extends AppCompatActivity {
 
         nameView.setText(v.getName());
 
-//        switch(v.getTag()) {
-//            case Utils.VisitTypes.HAIRCUT:
-//                radioGroup.check(R.id.radio_haircut);
-//                break;
-//            case Utils.VisitTypes.BARBER:
-//                radioGroup.check(R.id.radio_barber);
-//                break;
-//            case Utils.VisitTypes.COMBO:
-//                radioGroup.check(R.id.radio_combo);
-//                break;
-//        }
+        switch(v.getTag()) {
+            case Utils.VisitTypes.HAIRCUT:
+                radioGroup.check(R.id.radio_one);
+                break;
+            case Utils.VisitTypes.BARBER:
+                radioGroup.check(R.id.radio_second);
+                break;
+            case Utils.VisitTypes.COMBO:
+                radioGroup.check(R.id.radio_third);
+                break;
+        }
 
         databaseHelper.deleteVisitById(id);
     }
@@ -158,7 +157,7 @@ public class NewVisitActivity extends AppCompatActivity {
                     onTimeSetListener,
                     hour, minute, true);
 
-            timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable((Color.WHITE)));
+            Objects.requireNonNull(timePickerDialog.getWindow()).setBackgroundDrawable(new ColorDrawable((Color.WHITE))); // TODO: check it out
             timePickerDialog.show();
         });
 
@@ -175,7 +174,7 @@ public class NewVisitActivity extends AppCompatActivity {
         radioGroup = findViewById(R.id.radio_group);
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            checkedButton = findViewById(checkedId);
+            checkedButton = NewVisitActivity.this.findViewById(radioGroup.getCheckedRadioButtonId());
 
             switch (checkedButton.getText().toString()) {
                 case "barber":
@@ -188,26 +187,24 @@ public class NewVisitActivity extends AppCompatActivity {
                     tag = Utils.VisitTypes.HAIRCUT;
                     break;
                 default:
-                    tag = Utils.specialTags.WRONG;
+                    tag = Utils.SpecialTags.WRONG;
             }
         });
     }
 
     private void setApplyButton() {
         applyButton = findViewById(R.id.apply_button);
-        if(activityType == ActivityTypes.ADD)
-            applyButton.setText("ADD");
-        else
-            applyButton.setText("EDIT");
+        setApplyButtonText();
 
         applyButton.setOnClickListener(v -> {
-            if(nameView.getText().length() > 0 &&
-             date != null && time != null && tag != Utils.specialTags.WRONG) {
+            if(validateName() && validateDate() && validateTime() && validateTag()) {
+
                 String dateString = new SimpleDateFormat(Utils.DateFormats.DATE_FORMAT).format(date);
                 String timeString = new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(time);
                 String datetimeString = dateString + " " + timeString;
 
                 if (!databaseHelper.addData(new Visit(datetimeString, nameView.getText().toString(), tag))) {
+
                     Toast.makeText(NewVisitActivity.this, "Some error occurred!", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
@@ -217,42 +214,63 @@ public class NewVisitActivity extends AppCompatActivity {
                         Toast.makeText(NewVisitActivity.this, "Visit edited!", Toast.LENGTH_SHORT).show();
                     finish();
                 }
-            } else {
-//                if(!validTime())
-//                    Toast.makeText(NewVisitActivity.this, "Visit needs to be between working hours!", Toast.LENGTH_SHORT).show();
-//                else
-                Toast.makeText(NewVisitActivity.this, "One of fields were not provided!", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-//    private boolean validTime() {
-//        if(time != null) {
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.setTime(time);
-//            calendar.add(Calendar.DATE, 1);
-//            Date visitTime = calendar.getTime();
-//
-//
-//
-//
-//            try {
-//                Calendar calendarStart = Calendar.getInstance();
-//                calendarStart.setTime(new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).parse(Utils.WORKING_HOURS_START));
-//                calendarStart.add(Calendar.DATE, 1);
-//
-//                Calendar calendarEnd = Calendar.getInstance();
-//                calendarEnd.setTime(new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).parse(Utils.WORKING_HOURS_END));
-//                calendarEnd.add(Calendar.DATE, 1);
-//
-//                return (visitTime.before(calendarEnd.getTime()) &&
-//                        visitTime.after(calendarStart.getTime()));
-//            } catch (ParseException e) { e.printStackTrace(); }
-//        }
-//        return false;
-//    }
-//
-//    private boolean validDate() {
-//        return date != null;
-//    }
+    private void setApplyButtonText() {
+        if(activityType == ActivityTypes.ADD)
+            applyButton.setText("ADD");
+        else
+            applyButton.setText("EDIT");
+    }
+
+    private boolean validateTime() {
+        if(time != null) {
+            try {
+                Calendar calendar = Calendar.getInstance();
+
+                Calendar visitsStart = Calendar.getInstance();
+                visitsStart.setTime(new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).parse(Utils.WORKING_HOURS_START));
+                visitsStart.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+                Calendar visitsEnd = Calendar.getInstance();
+                visitsEnd.setTime(new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).parse(Utils.WORKING_HOURS_END));
+                visitsEnd.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+                return (time.before(visitsEnd.getTime()) &&
+                        time.after(visitsStart.getTime()));
+            } catch (ParseException e) { e.printStackTrace(); }
+            Toast.makeText(NewVisitActivity.this, "Visit needs to be between working hours!", Toast.LENGTH_SHORT).show();
+        }
+        Toast.makeText(NewVisitActivity.this, "Time was not provided!", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    private boolean validateDate() {
+        if(date != null)
+            return true;
+        else {
+            Toast.makeText(NewVisitActivity.this, "Date was not provided!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    private boolean validateName() {
+        if(nameView.getText().length() > 0)
+            return true;
+        else {
+            Toast.makeText(NewVisitActivity.this, "Name was not provided!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    private boolean validateTag() {
+        if (tag != Utils.SpecialTags.WRONG && tag != Utils.SpecialTags.BLANK)
+            return true;
+        else {
+            Toast.makeText(NewVisitActivity.this, "Visit type was not selected!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
 }

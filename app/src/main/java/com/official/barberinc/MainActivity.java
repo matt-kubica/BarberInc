@@ -22,8 +22,6 @@ import java.util.GregorianCalendar;
 
 public class MainActivity extends AppCompatActivity {
 
-
-
     private Toolbar toolbar;
     private FloatingActionButton fab;
     private CalendarView calendarView;
