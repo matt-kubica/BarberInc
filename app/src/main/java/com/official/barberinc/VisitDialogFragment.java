@@ -35,6 +35,7 @@ public class VisitDialogFragment extends DialogFragment {
 
     DeleteDialogListener listener;
 
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
