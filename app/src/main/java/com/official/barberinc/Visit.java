@@ -15,6 +15,11 @@ public class Visit {
     private String name;
     private int tag;
 
+    // it should be placed in visit's custom view, but for now there's no need for creating one
+    // so this filed is going to stay here :^)
+    // it provides information if it was displayed already, necesary for loop in setVisitsLayout()
+    public boolean displayed = false;
+
     private final int MILLIS_IN_MINUTE = 60000;
 
     private final static class StartTime {

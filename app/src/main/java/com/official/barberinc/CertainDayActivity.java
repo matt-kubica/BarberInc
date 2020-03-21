@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -81,40 +80,33 @@ public class CertainDayActivity extends AppCompatActivity implements VisitDialog
         Log.d(TAG, "setVisitsLayout called");
         visitsLayout = findViewById(R.id.visits_layout);
         visitsLayout.removeAllViews();
-        for(Visit v : visits) {
-            View visitView = LayoutInflater.from(this).inflate(R.layout.view_visit, null);
-            TextView timeView = visitView.findViewById(R.id.time);
-            TextView nameView = visitView.findViewById(R.id.name);
-            TextView tagNameView = visitView.findViewById(R.id.tag_name);
-            TextView idView = visitView.findViewById(R.id.visit_id);
+
+        for(Visit visit : visits) {
+            VisitView visitView = new VisitView(this);
+            visitView.setVisit(visit);
 
             // Params need to be type of parent layout, in this case - RelativeLayout
             RelativeLayout.LayoutParams visitViewParams = new RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    Utils.dpToPx(v.getDurationMinutes(), this)
+                    Utils.dpToPx(visit.getDurationMinutes(), this)
             );
-            visitViewParams.setMargins(0,Utils.dpToPx(v.getMinutesSinceStart(),this), 0, 0);
+            visitViewParams.setMargins(0,Utils.dpToPx(visit.getMinutesSinceStart(),this), 0, 0);
 
             visitView.setLayoutParams(visitViewParams);
-            visitView.setBackgroundResource(getBackgroundDependentOnVisit(v));
+            visitView.setBackgroundResource(getBackgroundDependentOnVisit(visit));
             visitView.requestLayout();
-
-            idView.setText(Integer.toString(v.getId()));
-            timeView.setText(new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(v.getStart()) + " - " +
-                    new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(v.getEnd()));
-            nameView.setText(v.getName());
-            tagNameView.setText(getTagNameDependentOnVisit(v));
+            visitView.setInnerViews();
 
             visitView.setOnLongClickListener(view -> {
-                DialogFragment dialogFragment = VisitDialogFragment.newInstance(v.getId(), v.getName());
+                DialogFragment dialogFragment = VisitDialogFragment.newInstance(visit.getId(), visit.getName());
                 dialogFragment.show(getSupportFragmentManager(), "dialog");
                 return true;
             });
-
             visitsLayout.addView(visitView);
         }
         Log.d(TAG, "setVisitsLayout finished");
     }
+
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialogFragment) {
@@ -197,21 +189,5 @@ public class CertainDayActivity extends AppCompatActivity implements VisitDialog
             return R.drawable.visit_combo_background;
     }
 
-    private String getTagNameDependentOnVisit(Visit visit) {
-        String tagName;
-        switch (visit.getTag()) {
-            case Utils.VisitTypes.HAIRCUT:
-                tagName = getResources().getString(R.string.tag_name_haircut);
-                break;
-            case Utils.VisitTypes.BARBER:
-                tagName = getResources().getString(R.string.tag_name_barber);
-                break;
-            case Utils.VisitTypes.COMBO:
-                tagName = getResources().getString(R.string.tag_name_combo);
-                break;
-            default:
-                tagName = "";
-        }
-        return tagName;
-    }
+
 }
