@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -198,7 +199,8 @@ public class NewVisitActivity extends AppCompatActivity {
         setApplyButtonText();
 
         applyButton.setOnClickListener(v -> {
-            if(validateName() && validateDate() && validateTime() && validateTag()) {
+            Log.d(TAG, "Apply button clicked!");
+            if(validateName() && validateDate() && validateTime() && validateTag() && checkIntersections()) {
 
                 String dateString = new SimpleDateFormat(Utils.DateFormats.DATE_FORMAT).format(date);
                 String timeString = new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(time);
@@ -215,6 +217,8 @@ public class NewVisitActivity extends AppCompatActivity {
                         Toast.makeText(NewVisitActivity.this, "Visit edited!", Toast.LENGTH_SHORT).show();
                     finish();
                 }
+            } else {
+                Log.d(TAG, "Some error occured!");
             }
         });
     }
@@ -239,10 +243,14 @@ public class NewVisitActivity extends AppCompatActivity {
                 visitsEnd.setTime(new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).parse(Utils.WORKING_HOURS_END));
                 visitsEnd.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
-                return (time.before(visitsEnd.getTime()) &&
-                        time.after(visitsStart.getTime()));
+                if((time.before(visitsEnd.getTime()) && time.after(visitsStart.getTime())))
+                    return true;
+                else {
+                    Toast.makeText(NewVisitActivity.this, "Visit needs to be between working hours!", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
             } catch (ParseException e) { e.printStackTrace(); }
-            Toast.makeText(NewVisitActivity.this, "Visit needs to be between working hours!", Toast.LENGTH_SHORT).show();
+
         }
         Toast.makeText(NewVisitActivity.this, "Time was not provided!", Toast.LENGTH_SHORT).show();
         return false;
@@ -273,5 +281,24 @@ public class NewVisitActivity extends AppCompatActivity {
             Toast.makeText(NewVisitActivity.this, "Visit type was not selected!", Toast.LENGTH_SHORT).show();
             return false;
         }
+    }
+
+    private boolean checkIntersections() {
+        String datetimeString = new SimpleDateFormat(Utils.DateFormats.DATE_FORMAT).format(date) + " " +
+                new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(time);
+        ArrayList <Visit> visits = databaseHelper.getDataFromCertainDay(new SimpleDateFormat(Utils.DateFormats.DATE_FORMAT).format(date));
+        Visit todayVisit = new Visit(datetimeString, nameView.getText().toString(), tag);
+        Log.d(TAG, String.format("Today's visits amount: %d", visits.size()));
+
+        for(Visit v : visits) {
+            Log.d(TAG, v.getName());
+            if((todayVisit.getStart().after(v.getStart()) && todayVisit.getStart().before(v.getEnd())) || (todayVisit.getStart().before(v.getStart()) && todayVisit.getEnd().after(v.getStart()))){
+                Toast.makeText(NewVisitActivity.this, String.format("Visit intersects with %s's visit (%s-%s)", v.getName(),
+                        new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(v.getStart()), new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(v.getEnd())),
+                        Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -3,16 +3,25 @@ package com.official.barberinc;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.DialogFragment;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class VisitView extends CoordinatorLayout {
 
+    public static final String TAG = "VisitView";
+
     private Visit visit;
+    private Context context;
     private TextView idView, nameView, timeView, tagNameView;
 
     public VisitView(Context context) {
@@ -36,6 +45,8 @@ public class VisitView extends CoordinatorLayout {
 
 
     private void init(Context context, @Nullable AttributeSet attributeSet) {
+        this.context = context;
+
         idView = findViewById(R.id.visit_id);
         nameView = findViewById(R.id.name);
         timeView = findViewById(R.id.time);
@@ -50,11 +61,25 @@ public class VisitView extends CoordinatorLayout {
 //        }
     }
 
+    public void setLayout() {
+        RelativeLayout.LayoutParams visitViewParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                Utils.dpToPx(visit.getDurationMinutes(), context)
+        );
+        visitViewParams.setMargins(0,Utils.dpToPx(visit.getMinutesSinceStart(),context), 0, 0);
+
+        setBackgroundResource(getBackgroundDependentOnVisit(visit));
+        requestLayout();
+        setInnerViews();
+
+        setLayoutParams(visitViewParams);
+    }
+
     public void setVisit(Visit visit) {
         this.visit = visit;
     }
 
-    public void setLayout() {}
+    public Visit getVisit() { return this.visit; }
 
     public void setInnerViews() {
         idView.setText(Integer.toString(visit.getId()));
@@ -80,5 +105,14 @@ public class VisitView extends CoordinatorLayout {
                 tagName = "";
         }
         return tagName;
+    }
+
+    private int getBackgroundDependentOnVisit(Visit visit) {
+        if(visit.getTag() == Utils.VisitTypes.HAIRCUT)
+            return R.drawable.visit_haircut_background;
+        else if(visit.getTag() == Utils.VisitTypes.BARBER)
+            return R.drawable.visit_barber_background;
+        else
+            return R.drawable.visit_combo_background;
     }
 }

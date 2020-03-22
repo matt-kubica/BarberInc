@@ -77,25 +77,13 @@ public class CertainDayActivity extends AppCompatActivity implements VisitDialog
 
 
     private void setVisitsLayout() {
-        Log.d(TAG, "setVisitsLayout called");
         visitsLayout = findViewById(R.id.visits_layout);
         visitsLayout.removeAllViews();
 
         for(Visit visit : visits) {
             VisitView visitView = new VisitView(this);
             visitView.setVisit(visit);
-
-            // Params need to be type of parent layout, in this case - RelativeLayout
-            RelativeLayout.LayoutParams visitViewParams = new RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    Utils.dpToPx(visit.getDurationMinutes(), this)
-            );
-            visitViewParams.setMargins(0,Utils.dpToPx(visit.getMinutesSinceStart(),this), 0, 0);
-
-            visitView.setLayoutParams(visitViewParams);
-            visitView.setBackgroundResource(getBackgroundDependentOnVisit(visit));
-            visitView.requestLayout();
-            visitView.setInnerViews();
+            visitView.setLayout();
 
             visitView.setOnLongClickListener(view -> {
                 DialogFragment dialogFragment = VisitDialogFragment.newInstance(visit.getId(), visit.getName());
@@ -104,8 +92,20 @@ public class CertainDayActivity extends AppCompatActivity implements VisitDialog
             });
             visitsLayout.addView(visitView);
         }
-        Log.d(TAG, "setVisitsLayout finished");
     }
+
+    private ArrayList <Visit> getVisitsIntersectWith(Visit visit) {
+        ArrayList <Visit> result = new ArrayList<>();
+
+        for(Visit v : visits) {
+            if(v.getEnd().after(visit.getStart()) && visit.getStart().after(v.getStart())) {
+                result.add(v);
+            }
+        }
+        return result;
+    }
+
+
 
 
     @Override
@@ -180,14 +180,7 @@ public class CertainDayActivity extends AppCompatActivity implements VisitDialog
         visits = databaseHelper.getDataFromCertainDay(new SimpleDateFormat(Utils.DateFormats.DATE_FORMAT).format(date));
     }
 
-    private int getBackgroundDependentOnVisit(Visit visit) {
-        if(visit.getTag() == Utils.VisitTypes.HAIRCUT)
-            return R.drawable.visit_haircut_background;
-        else if(visit.getTag() == Utils.VisitTypes.BARBER)
-            return R.drawable.visit_barber_background;
-        else
-            return R.drawable.visit_combo_background;
-    }
+
 
 
 }
