@@ -1,7 +1,7 @@
 # BarberInc
 
 ## Overview 
-Simple app that helps schedule visits in small one-man show barbershop. Main functionalities:
+Simple app that helps schedule visits in small one-man barbershop. Main functionalities:
 * Adding new visit - parameters that need to be provided:
     * date
     * time
@@ -12,13 +12,17 @@ Simple app that helps schedule visits in small one-man show barbershop. Main fun
     * name
     * visit type
 * Displaying visits on certain date
+* Editing visits on certain date
+* Deleting visits on certain date
+For now app is fully functional and it is being tested by my barber friend, anyway there is always something to do :)
 
-Functionalities that are going to be implemented in the future:
-* Deleting visits
-* Setting visit's types duration from an app
-* Resolving time conflicts
+## TODO
+* Warning is displayed and user is not able to add (or edit) visit which starts before other ends etc. (visits intersection). In the future there shuould be possibility to add visits that slightly intersect
+* Add settings menu
 
 ## Screenshots
 ![main_activity](screenshots/main_activity.png)
 ![certain_day](screenshots/certain_day.png)
 ![add_visit](screenshots/add_visit.png)
+![edit_dialog](screenshots/edit_dialog.png)
+![intersection_conflict](screenshots/intersection_conflict.png)
