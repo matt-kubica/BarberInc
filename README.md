@@ -14,7 +14,9 @@ Simple app that helps schedule visits in small one-man barbershop. Main function
 * Displaying visits on certain date
 * Editing visits on certain date
 * Deleting visits on certain date
-For now app is fully functional and it is being tested by my barber friend, anyway there is always something to do :)
+
+## Disclaimer
+For now app is fully functional and it is being tested manually by my barber friend, also there is always something new to implement :)
 
 ## TODO
 * Warning is displayed and user is not able to add (or edit) visit which starts before other ends etc. (visits intersection). In the future there shuould be possibility to add visits that slightly intersect
