@@ -53,6 +53,7 @@ public class NewVisitActivity extends AppCompatActivity {
     private Button applyButton;
 
     private int activityType;
+    private int visitId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,7 @@ public class NewVisitActivity extends AppCompatActivity {
 
     private void setViewAccordingToVisit(int id) {
         Visit v = databaseHelper.getVisitById(id);
+        visitId = id;
 
         timeView.setText(new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(v.getStart()));
         time = v.getStart();
@@ -105,7 +107,7 @@ public class NewVisitActivity extends AppCompatActivity {
                 break;
         }
 
-        databaseHelper.deleteVisitById(id);
+
     }
 
     private void setNameView() {
@@ -151,7 +153,7 @@ public class NewVisitActivity extends AppCompatActivity {
         timeView.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
             int minute = calendar.get(Calendar.MINUTE);
-            int hour = calendar.get(Calendar.HOUR);
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
 
             TimePickerDialog timePickerDialog = new TimePickerDialog(
                     NewVisitActivity.this,
@@ -213,12 +215,15 @@ public class NewVisitActivity extends AppCompatActivity {
                 } else {
                     if(activityType == ActivityTypes.ADD)
                         Toast.makeText(NewVisitActivity.this, "New visit added!", Toast.LENGTH_SHORT).show();
-                    else
+                    else {
                         Toast.makeText(NewVisitActivity.this, "Visit edited!", Toast.LENGTH_SHORT).show();
+                        databaseHelper.deleteVisitById(visitId);
+                    }
+
                     finish();
                 }
             } else {
-                Log.d(TAG, "Some error occured!");
+                Log.d(TAG, "Some error occurred!");
             }
         });
     }
@@ -291,7 +296,8 @@ public class NewVisitActivity extends AppCompatActivity {
         Log.d(TAG, String.format("Today's visits amount: %d", visits.size()));
 
         for(Visit v : visits) {
-            Log.d(TAG, v.getName());
+            if(v.getId() == visitId)
+                continue;
             if((todayVisit.getStart().after(v.getStart()) && todayVisit.getStart().before(v.getEnd())) || (todayVisit.getStart().before(v.getStart()) && todayVisit.getEnd().after(v.getStart()))){
                 Toast.makeText(NewVisitActivity.this, String.format("Visit intersects with %s's visit (%s-%s)", v.getName(),
                         new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(v.getStart()), new SimpleDateFormat(Utils.DateFormats.TIME_FORMAT).format(v.getEnd())),
