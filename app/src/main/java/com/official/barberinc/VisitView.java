@@ -3,8 +3,6 @@ package com.official.barberinc;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.view.TextureView;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -55,6 +53,8 @@ public class VisitView extends CoordinatorLayout {
     public void setVisit(Visit visit) {
         this.visit = visit;
     }
+
+    public void setLayout() {}
 
     public void setInnerViews() {
         idView.setText(Integer.toString(visit.getId()));
